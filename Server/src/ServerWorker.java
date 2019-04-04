@@ -1,9 +1,7 @@
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class ServerWorker extends Thread{
@@ -50,19 +48,16 @@ public class ServerWorker extends Thread{
     }
 
     // format: "msg" "login" message...
-    // format: "msg" "#topic" massage...
     public void handleMessage( String[] tokens ) throws IOException {
         String sendTo = tokens[1], body_msg = tokens[2];
-
         List<ServerWorker> workList = server.getWorkerList();
         for ( ServerWorker worker : workList ){
             try {
                 if ( sendTo.equalsIgnoreCase( worker.getLogin() ) ) {
                     String out_msg = "msg " + login + " " + body_msg + "\n";
-                    worker.send( out_msg );
+                    worker.send( out_msg.getBytes() );
                 }
             }catch ( SocketException err ){
-                handleError();
             }
         }
 
@@ -74,7 +69,7 @@ public class ServerWorker extends Thread{
 
         for(ServerWorker worker : workList) {
             if ( !login.equals( worker.getLogin() ) ) {
-                worker.send( "Offline: " + login + "\n" );
+                worker.send( ("Offline: " + login + "\n").getBytes() );
             }
         }
         clientSocket.close();
@@ -102,7 +97,7 @@ public class ServerWorker extends Thread{
                 for(ServerWorker worker : workList) {
                     if (worker.getLogin() != null && !login.equals( worker.getLogin()) ){
                         String message = "\nonline: " + worker.getLogin() + "\n";
-                        send( message);
+                        send( message.getBytes());
 
                     }
                 }
@@ -111,8 +106,7 @@ public class ServerWorker extends Thread{
                 String online_Status = "\nOnline: " + login + "\n";
                 for(ServerWorker worker : workList) {
                     if ( !login.equals( worker.getLogin() ) ) {
-                        worker.send(online_Status);
-
+                        worker.send(online_Status.getBytes());
                     }
                 }
             }else{
@@ -123,18 +117,9 @@ public class ServerWorker extends Thread{
         }
     }
 
-    public void send( String msg ) throws IOException{
+    public void send( byte[] msg ) throws IOException{
         if (login != null){
-            out.write( msg.getBytes() );
-        }
-    }
-
-    public void handleError( ) throws IOException {
-        server.removeWorker( this );
-        List<ServerWorker> workList = server.getWorkerList();
-        for (ServerWorker worker : workList){
-            String out_msg = getLogin() + " is offline \n";
-            worker.send( out_msg);
+            out.write( msg );
         }
     }
 
