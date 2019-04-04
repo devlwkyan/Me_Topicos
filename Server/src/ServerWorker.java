@@ -82,13 +82,6 @@ public class ServerWorker extends Thread{
             String login = tokens[1];
 
             if(!login.isBlank()){
-
-//            if(login.equals( "Alpha" ) || login.equals( "Beta" ) || login.equals( "Gamma" ) || login.equals( "Delta" )|| login.equals( "Epsilon" )|| login.equals( "Sigma" )   ){
-//                this.login = login;
-//                String loggedin = "\n" + login + " has logged in" + "\n";
-//                out.write( loggedin.getBytes() );
-//                System.out.println("User logged in: " + login);
-
                 List<ServerWorker> workList = server.getWorkerList();
 
 
