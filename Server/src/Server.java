@@ -38,5 +38,3 @@ public class Server extends Thread{
         workerList.remove(serverWork);
     }
 }
-
-}
