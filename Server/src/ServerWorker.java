@@ -60,9 +60,6 @@ public class ServerWorker extends Thread{
                 if ( sendTo.equalsIgnoreCase( worker.getLogin() ) ) {
                     String out_msg = "msg " + login + " " + body_msg + "\n";
                     worker.send( out_msg );
-                } else if ( sendTo.equalsIgnoreCase( "all" ) && !login.equals( worker.getLogin() ) ) {
-                    String out_msg = getLogin() + ": " + body_msg + "\n";
-                    worker.send( out_msg );
                 }
             }catch ( SocketException err ){
                 handleError();
